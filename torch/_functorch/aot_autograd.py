@@ -39,6 +39,8 @@ from torch._decomp.decompositions_for_rng import PhiloxStateTracker, rng_decompo
 from . import config
 from .partitioners import default_partition
 from torch._guards import TracingContext, DuplicateInputs, Source
+from torch.nested._internal.nested_tensor import NestedTensor
+
 
 original_zip = zip
 
@@ -1204,6 +1206,16 @@ def run_functionalized_fw_and_collect_metadata(
             [x for x in input_info if x.mutates_data or x.mutates_metadata]
         )
 
+        # If a subclass does extra aliasing between graph outputs/inputs in a way
+        # that is not visible above the sublass, then we can end up having tangents
+        # that alias inputs.
+        def view_avoid_dupes_with_primals(t):
+            if isinstance(t, Tensor) and is_traceable_wrapper_subclass(t):
+                return transform_subclass(t, lambda _, inner_t: view_avoid_dupes_with_primals(inner_t))
+            if isinstance(t, Tensor):
+                return t.view(t.shape)
+            return t
+
         # This analysis function returns *only* the outputs that are meant to be tangents to the backwards.
         # Anything that aliases (inputs returned in the fw due to metadata mutations, or outputs that alias inputs/intermediates)
         # are *regenerated* later, and not used directly in the autograd graph
@@ -1222,6 +1234,7 @@ def run_functionalized_fw_and_collect_metadata(
         # intermediate bases are also included in the backward graph
         f_tangents = f_input_tangents + f_output_tangents + intermediate_bases
         traced_tangents = pytree.tree_map(from_fun, f_tangents)
+        traced_tangents = pytree.tree_map(view_avoid_dupes_with_primals, traced_tangents)
         user_outs = pytree.tree_map(from_fun, f_output_tangents)
 
         f_mutated_inputs = [
