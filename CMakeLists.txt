@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.18 FATAL_ERROR)
 # cmake_policy(SET CMP0022 NEW) cmake_policy(SET CMP0023 NEW)
+set(OPENSSL_ROOT_DIR "$ENV{OPENSSL_ROOT_DIR}")
+add_compile_options("$<$<COMPILE_LANGUAGE:CUDA>:--compiler-options=-allow-unsupported-compiler>")
 
 # Use compiler ID "AppleClang" instead of "Clang" for XCode. Not setting this
 # sometimes makes XCode C compiler gets detected as "Clang", even when the C++
