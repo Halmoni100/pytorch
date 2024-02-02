@@ -81,6 +81,9 @@ def check_model(
         torch.manual_seed(0)
         if not isinstance(model, types.FunctionType):
             model = model.to(self.device)
+            flattened, spec = pytree.tree_flatten(example_inputs)
+            flattened = tuple([input.to(self.device) for input in flattened])
+            example_inputs = pytree.tree_unflatten(flattened, spec)
         ref_model = copy.deepcopy(model)
         ref_inputs = copy.deepcopy(example_inputs)
         expected = ref_model(*ref_inputs)
