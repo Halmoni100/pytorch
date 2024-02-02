@@ -349,7 +349,6 @@ class FakeTensorConverter:
                 if t in tracing_context.tensor_to_context:
                     symbolic_context = tracing_context.tensor_to_context[t]
                     source = symbolic_context.tensor_source
-
         maybe_memo = self._get_memo(t)
         if maybe_memo is not None:
             return maybe_memo

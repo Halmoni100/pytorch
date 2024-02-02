@@ -552,6 +552,8 @@ class TorchInGraphFunctionVariable(BaseTorchVariable):
             raise unimplemented(
                 "torch.nn.functional.one_hot with data-dependent output shape"
             )
+        elif self.value is torch.sparse_coo_tensor:
+            raise unimplemented("torch.sparse_coo_tensor")
         else:
             any_symints_or_symfloats = any(isinstance(x, SymNodeVariable) for x in args)
             all_ints_or_floats = all(
@@ -610,14 +612,18 @@ For now, dynamo will explicitly graph break when it encounters user code with th
                     # This is slower and less canonical, so only use it if we
                     # have to
                     fn_ = torch._refs.tensor
-
-            tensor_variable = wrap_fx_proxy(
-                tx=tx,
-                proxy=tx.output.create_proxy(
+            try:
+                fx_proxy = tx.output.create_proxy(
                     "call_function",
                     fn_,
                     *proxy_args_kwargs(args, kwargs),
-                ),
+                )
+            except NotImplementedError as e:
+                raise unimplemented(f"call_function: {fn_}") from e
+
+            tensor_variable = wrap_fx_proxy(
+                tx=tx,
+                proxy=fx_proxy,
             )
 
             if (
