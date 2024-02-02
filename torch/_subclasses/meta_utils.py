@@ -640,13 +640,7 @@ class MetaConverter:
             if t.device.type != "xla" and any(
                 [
                     t.is_sparse_csr,
-                    t.layout
-                    in [
-                        torch.sparse_csc,
-                        torch.sparse_bsr,
-                        torch.sparse_bsc,
-                        torch.sparse_coo,
-                    ],
+                    t.layout in [torch.sparse_csc, torch.sparse_bsr, torch.sparse_bsc],
                     t.is_quantized,
                     t._is_view() and t._base is not None and t._base.is_sparse,
                     torch._is_functional_tensor(t),
