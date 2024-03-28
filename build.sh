@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+VERSION=2.2.2
+
 git submodule sync
 git submodule update --init --recursive
 
@@ -25,6 +27,7 @@ export LD_LIBRARY_PATH=$abseil_LIB_SINGLE_DIR:$protobuf_LIB_SINGLE_DIR
 
 git submodule update --init --recursive
 export TORCH_PACKAGE_NAME=chong-torch
-export PYTORCH_BUILD_VERSION=2.2.0
+export PYTORCH_BUILD_VERSION=$VERSION
 export PYTORCH_BUILD_NUMBER=0
 python setup.py bdist_wheel
+twine upload -r private dist/chong_torch-$VERSION-cp310-cp310-linux_x86_64.whl
