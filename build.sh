@@ -15,7 +15,7 @@ cd ..
 
 export OPENSSL_ROOT_DIR=$openssl_ROOT_SINGLE_DIR
 echo "OPENSSL_ROOT_DIR=$OPENSSL_ROOT_DIR"
-export CMAKE_PREFIX_PATH=$abseil_LIB_SINGLE_DIR/cmake:$protobuf_LIB_SINGLE_DIR/cmake:$onnx_LIB_SINGLE_DIR/cmake
+export CMAKE_PREFIX_PATH=$abseil_LIB_SINGLE_DIR/cmake:$protobuf_LIB_SINGLE_DIR/cmake/protobuf:$onnx_LIB_SINGLE_DIR/cmake
 echo "CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH"
 # see tools/setup_helpers/cmake.py:189
 export _GLIBCXX_USE_CXX_ABI=1
@@ -30,4 +30,4 @@ export TORCH_PACKAGE_NAME=chong-torch
 export PYTORCH_BUILD_VERSION=$VERSION
 export PYTORCH_BUILD_NUMBER=0
 python setup.py bdist_wheel
-twine upload -r private dist/chong_torch-$VERSION-cp310-cp310-linux_x86_64.whl
+twine upload -r chong dist/chong_torch-$VERSION-cp310-cp310-linux_x86_64.whl
