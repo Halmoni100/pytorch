@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.18 FATAL_ERROR)
 set(OPENSSL_ROOT_DIR "$ENV{OPENSSL_ROOT_DIR}")
+add_compile_options("$<$<COMPILE_LANGUAGE:CUDA>:--compiler-options=-allow-unsupported-compiler>")
 #cmake_policy(SET CMP0022 NEW)
 #cmake_policy(SET CMP0023 NEW)
 

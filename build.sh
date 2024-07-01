@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-VERSION=2.2.2
+VERSION=2.3.1
 
 git submodule sync
 git submodule update --init --recursive
 
-pip install pyyaml typing-extensions numpy pynvim
+pip install pyyaml typing-extensions numpy pynvim setuptools twine
 
 cd conan
 rm -rf generators
@@ -30,4 +30,4 @@ export TORCH_PACKAGE_NAME=chong-torch
 export PYTORCH_BUILD_VERSION=$VERSION
 export PYTORCH_BUILD_NUMBER=0
 python setup.py bdist_wheel
-twine upload -r chong dist/chong_torch-$VERSION-cp310-cp310-linux_x86_64.whl
+twine upload -r chong dist/chong_torch-$VERSION-cp312-cp312-linux_x86_64.whl
