@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION=2.3.1
+VERSION=2.4.0
 
 git submodule sync
 git submodule update --init --recursive
@@ -10,7 +10,7 @@ pip install pyyaml typing-extensions numpy pynvim setuptools twine
 cd conan
 rm -rf generators
 conan install .
-source generators/conan_shell_export.sh
+. generators/conan_shell_export.sh
 cd ..
 
 export OPENSSL_ROOT_DIR=$openssl_ROOT_SINGLE_DIR
@@ -29,5 +29,7 @@ git submodule update --init --recursive
 export TORCH_PACKAGE_NAME=chong-torch
 export PYTORCH_BUILD_VERSION=$VERSION
 export PYTORCH_BUILD_NUMBER=0
+export CC=gcc-13
+export CXX=g++-13
 python setup.py bdist_wheel
 twine upload -r chong dist/chong_torch-$VERSION-cp312-cp312-linux_x86_64.whl
