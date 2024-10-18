@@ -32,4 +32,4 @@ export PYTORCH_BUILD_NUMBER=0
 export CC=gcc-13
 export CXX=g++-13
 python setup.py bdist_wheel
-twine upload -r fhong dist/chong_torch-$VERSION-cp312-cp312-linux_x86_64.whl
+twine upload -r chong dist/chong_torch-$VERSION-cp312-cp312-linux_x86_64.whl
