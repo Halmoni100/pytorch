@@ -330,7 +330,7 @@ if(CAFFE2_USE_MKL AND BUILD_LIBTORCHLESS)
   target_link_libraries(torch_python PRIVATE caffe2::mkl)
 endif()
 
-add_dependencies(torch_python onnx_proto)
+add_dependencies(torch_python ONNX::onnx_proto)
 # Avoid numpy for the DEPLOY build
 if(USE_NUMPY)
   target_link_libraries(torch_python PRIVATE Python::NumPy)

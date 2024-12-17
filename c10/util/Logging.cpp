@@ -262,20 +262,20 @@ void setLogLevelFlagFromEnv();
 // directly via the GFLAGS definition, so we will use DECLARE_* to declare
 // them, and use them in Caffe2.
 // GLOG's minloglevel
-DECLARE_int32(minloglevel);
+DECLARE_int32(c10_minloglevel);
 // GLOG's verbose log value.
-DECLARE_int32(v);
+DECLARE_int32(c10_v);
 // GLOG's logtostderr value
-DECLARE_bool(logtostderr);
+DECLARE_bool(c10_logtostderr);
 #endif // defined(C10_USE_GFLAGS) && defined(C10_USE_GLOG)
 
 #if !defined(C10_USE_GLOG)
 // This backward compatibility flags are in order to deal with cases where
 // Caffe2 are not built with glog, but some init flags still pass in these
 // flags. They may go away in the future.
-C10_DEFINE_int32(minloglevel, 0, "Equivalent to glog minloglevel")
-C10_DEFINE_int32(v, 0, "Equivalent to glog verbose")
-C10_DEFINE_bool(logtostderr, false, "Equivalent to glog logtostderr")
+C10_DEFINE_int32(c10_minloglevel, 0, "Equivalent to glog minloglevel");
+C10_DEFINE_int32(c10_v, 0, "Equivalent to glog verbose");
+C10_DEFINE_bool(c10_logtostderr, false, "Equivalent to glog logtostderr");
 #endif // !defined(c10_USE_GLOG)
 
 #ifdef C10_USE_GLOG
@@ -285,9 +285,9 @@ C10_DEFINE_bool(logtostderr, false, "Equivalent to glog logtostderr")
 // consistent between GLOG and GFLAGS, so we can do the below declaration
 // consistently.
 namespace c10 {
-using fLB::FLAGS_logtostderr;
-using fLI::FLAGS_minloglevel;
-using fLI::FLAGS_v;
+using fLB::FLAGS_c10_logtostderr;
+using fLI::FLAGS_c10_minloglevel;
+using fLI::FLAGS_c10_v;
 } // namespace c10
 
 C10_DEFINE_int(
@@ -349,20 +349,20 @@ void UpdateLoggingLevelsFromFlags() {
 #endif
   // If caffe2_log_level is set and is lower than the min log level by glog,
   // we will transfer the caffe2_log_level setting to glog to override that.
-  FLAGS_minloglevel = std::min(FLAGS_caffe2_log_level, FLAGS_minloglevel);
+  FLAGS_c10_minloglevel = std::min(FLAGS_caffe2_log_level, FLAGS_c10_minloglevel);
   // If caffe2_log_level is explicitly set, let's also turn on logtostderr.
   if (FLAGS_caffe2_log_level < google::GLOG_WARNING) {
-    FLAGS_logtostderr = 1;
+    FLAGS_c10_logtostderr = 1;
   }
   // Also, transfer the caffe2_log_level verbose setting to glog.
   if (FLAGS_caffe2_log_level < 0) {
-    FLAGS_v = std::min(FLAGS_v, -FLAGS_caffe2_log_level);
+    FLAGS_c10_v = std::min(FLAGS_c10_v, -FLAGS_caffe2_log_level);
   }
 }
 
 void ShowLogInfoToStderr() {
-  FLAGS_logtostderr = 1;
-  FLAGS_minloglevel = std::min(FLAGS_minloglevel, google::GLOG_INFO);
+  FLAGS_c10_logtostderr = 1;
+  FLAGS_c10_minloglevel = std::min(FLAGS_c10_minloglevel, google::GLOG_INFO);
 }
 } // namespace c10
 

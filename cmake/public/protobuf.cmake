@@ -1,5 +1,9 @@
 # ---[ Protobuf
 
+find_package(absl REQUIRED)
+get_target_property(ABSL_INCLUDE_DIRS absl::base INTERFACE_INCLUDE_DIRECTORIES)
+include_directories(${ABSL_INCLUDE_DIRS})
+
 # We will try to use the config mode first, and then manual find.
 find_package(Protobuf CONFIG QUIET)
 if(NOT Protobuf_FOUND)
