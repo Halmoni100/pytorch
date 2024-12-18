@@ -3,7 +3,7 @@ from conan import ConanFile
 class PytorchConan(ConanFile):
     name = "pytorch-conan"
     requires = "abseil/20240722.0@chong/dev", "protobuf/28.3@chong/dev", "onnx/1.17.0@chong/dev", "openssl/3.3.2@chong/dev"
-    python_requires = "shell/0.0.1"
+    python_requires = "shell/0.0.9"
 
     def layout(self):
         self.folders.generators = "generators"

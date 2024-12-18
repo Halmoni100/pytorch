@@ -818,19 +818,19 @@ id<MTLLibrary> MetalShaderLibrary::getLibrary(const std::initializer_list<std::s
   auto it = params.begin();
   switch (nparams) {
     case 1:
-      lib = compileLibrary(fmt::format(shaderSource, *it));
+      lib = compileLibrary(fmt::vformat(shaderSource, fmt::make_format_args(*it)));
       break;
     case 2: {
       auto& first = *it++;
       auto& second = *it;
-      lib = compileLibrary(fmt::format(shaderSource, first, second));
+      lib = compileLibrary(fmt::vformat(shaderSource, fmt::make_format_args(first, second)));
       break;
     }
     case 3: {
       auto& first = *it++;
       auto& second = *it++;
       auto& third = *it;
-      lib = compileLibrary(fmt::format(shaderSource, first, second, third));
+      lib = compileLibrary(fmt::vformat(shaderSource, fmt::make_format_args(first, second, third)));
       break;
     }
     default:
@@ -860,7 +860,8 @@ id<MTLLibrary> MetalShaderLibrary::compileLibrary(const std::string& src) {
 std::pair<id<MTLComputePipelineState>, id<MTLFunction>> MetalShaderLibrary::getLibraryPipelineState(
     id<MTLLibrary> lib,
     const std::string& fname) {
-  const auto key = fmt::format("{}:{}", reinterpret_cast<void*>(lib), fname);
+  void* libPtr = reinterpret_cast<void*>(lib);
+  const auto key = fmt::vformat("{}:{}", fmt::make_format_args(libPtr, fname));
   auto found_cpl = cplMap.find(key);
   if (found_cpl != cplMap.end()) {
     return found_cpl->second;

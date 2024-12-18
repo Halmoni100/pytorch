@@ -26,10 +26,17 @@ export USE_SYSTEM_ONNX=1
 export LD_LIBRARY_PATH=$abseil_LIB_SINGLE_DIR:$protobuf_LIB_SINGLE_DIR
 
 git submodule update --init --recursive
-export TORCH_PACKAGE_NAME=chong-torch
+export TORCH_PACKAGE_NAME=chong-torch-cpu
 export PYTORCH_BUILD_VERSION=$VERSION
 export PYTORCH_BUILD_NUMBER=0
-export CC=gcc-13
-export CXX=g++-13
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    export CC=clang-19
+    export CXX=clang-19
+    export CXX_FLAGS="-nostdinc++ -nostdlib++ -isystem /opt/homebrew/opt/llvm/include/c++/v1"
+    export LDFLAGS="-nostdlib++ -L /opt/homebrew/opt/llvm/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm/lib/c++ -lc++"
+    export USE_CUDA=0
+elif [[ "$OSTYPE" == "linux"* ]]; then
+    export CC=gcc-13
+    export CXX=g++-13
+fi
 python setup.py bdist_wheel
-twine upload -r chong dist/chong_torch-$VERSION-cp312-cp312-linux_x86_64.whl
