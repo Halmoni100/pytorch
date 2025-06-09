@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION=2.5.1
+VERSION=2.7.1
 
 git submodule sync
 git submodule update --init --recursive
